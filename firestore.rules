@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { return isSignedIn() && request.auth.token.role == 'admin'; }
+    function isOwner(uid) { return isSignedIn() && request.auth.uid == uid; }
+
+    // ===== Facturas =====
+    // Cada doc debe tener supplierUid (uid del proveedor dueño)
+    match /invoices/{invoiceId} {
+      // Ver una factura propia o cualquier factura si eres admin
+      allow read: if isAdmin() || (isSignedIn() && resource.data.supplierUid == request.auth.uid);
+      // Crear: el cuerpo que llega DEBE tener supplierUid = tu uid
+      allow create: if isSignedIn() && request.resource.data.supplierUid == request.auth.uid;
+      // Editar / borrar: el dueño o admin (y no se puede cambiar el dueño)
+      allow update, delete: if isAdmin() ||
+        (isSignedIn() &&
+         resource.data.supplierUid == request.auth.uid &&
+         request.resource.data.supplierUid == request.auth.uid);
+    }
+
+    // ===== Perfil de proveedor =====
+    match /suppliers/{uid} {
+      allow read, write: if isAdmin() || isOwner(uid);
+      // Subcolección de contactos del proveedor
+      match /contacts/{contactId} {
+        allow read, write: if isAdmin() || isOwner(uid);
+      }
+    }
+
+    // ===== Lista de usuarios (si la usas) =====
+    match /users/{uid} {
+      allow read, write: if isAdmin() || isOwner(uid);
+    }
+
+    // Denegar todo lo demás por defecto
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

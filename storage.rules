@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { return isSignedIn() && request.auth.token.role == 'admin'; }
+
+    // PDFs en invoices/{uid}/...
+    match /invoices/{uid}/{fileId} {
+      // El dueño puede leer/escribir sus archivos; admin puede todo.
+      allow read, write: if isAdmin() || (isSignedIn() && request.auth.uid == uid);
+    }
+
+    // Todo lo demás denegado
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
+
