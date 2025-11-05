@@ -673,8 +673,8 @@ gcloud run services describe neo-backend --region us-central1
 
 ## 📞 **SOPORTE Y CONTACTO**
 
-- **Repositorio:** [GitHub](https://github.com/TU-USUARIO/neo-portal-backend)
-- **Issues:** [GitHub Issues](https://github.com/TU-USUARIO/neo-portal-backend/issues)
+- **Repositorio:** [GitHub](https://github.com/MatSV27/neo-portal-backend)
+- **Issues:** [GitHub Issues](https://github.com/MatSV27/neo-portal-backend/issues)
 - **Email:** tu-email@ejemplo.com
 
 ---
@@ -687,7 +687,7 @@ Este proyecto fue desarrollado como MVP para el reto técnico de Neo.
 
 ## 🎓 **CRÉDITOS**
 
-Desarrollado por: **Tu Nombre**  
+Desarrollado por: **Mateo Leonardo Solorzano Vega**  
 Fecha: **Noviembre 2025**  
 Reto: **Portal de Proveedores Neo - MVP**
 
